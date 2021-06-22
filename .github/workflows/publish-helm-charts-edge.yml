@@ -28,9 +28,10 @@ jobs:
 
       - name: Determine Helm Charts to release ⚙️
         id: helm-charts
-        run: |
-          HELM_CHARTS=$(python -c "import os, json; print json.dumps(os.listdir('${{ env.CHARTS_DIR }}'))")
-          echo "::set-output name=helm-charts::${HELM_CHARTS}"
+        run: ${GITHUB_WORKSPACE}/.github/scripts/determine-helm-charts-to-release.py
+
+      - name: Helm Charts to Release 📌
+        run: echo ${{ steps.helm-charts.outputs.helm-charts }}
 
   lint:
     runs-on: ubuntu-latest
@@ -233,7 +234,7 @@ jobs:
       id: download-helm-charts
       uses: actions/download-artifact@v2
       with:
-        path: charts
+        path: ${{ env.CHARTS_DIR }}
 
     - name: Push Updated Helm Chart Verions 💾
       uses: github-actions-x/commit@v2.7
