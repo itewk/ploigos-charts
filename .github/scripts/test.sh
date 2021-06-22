@@ -1,5 +1,5 @@
 #!/bin/bash
 
 ct install \
-  --chart-dirs charts/ploigos-workflow/ \
+  --chart-dirs ${CHARTS_DIR} \
   --all

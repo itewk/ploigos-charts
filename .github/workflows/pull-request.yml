@@ -9,6 +9,9 @@ on:
     - .github/**
     - charts/**
 
+env:
+  CHARTS_DIR: 'charts/ploigos-workflow'
+
 jobs:
   lint:
     runs-on: ubuntu-latest
