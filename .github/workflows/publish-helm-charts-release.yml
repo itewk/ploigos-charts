@@ -191,7 +191,9 @@ jobs:
         version: v3.6.1
 
     - name: Run chart-releaser 🚀
-      uses: helm/chart-releaser-action@v1.1.0
+      uses: helm/chart-releaser-action@v1.2.1
+      with:
+        charts_dir: "${{ env.CHARTS_DIR }}"
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
