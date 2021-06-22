@@ -9,11 +9,11 @@ kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-    name: haproxy
-    annotations:
+  name: haproxy
+  annotations:
     ingressclass.kubernetes.io/is-default-class: 'true'
 spec:
-    controller: haproxy-ingress.github.io/controller
+  controller: haproxy-ingress.github.io/controller
 EOF
 
 echo "Install tekton"
