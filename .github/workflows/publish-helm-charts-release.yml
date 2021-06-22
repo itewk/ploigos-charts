@@ -6,6 +6,9 @@ on:
     types:
     - published
 
+env:
+  CHARTS_DIR: 'charts/ploigos-workflow'
+
 jobs:
   # NOTE:
   #   * currently no way to filter on release actions
@@ -43,7 +46,7 @@ jobs:
       - name: Determine Helm Charts to release ⚙️
         id: helm-charts
         run: |
-          HELM_CHARTS=$(python -c 'import os, json; print json.dumps(os.listdir("charts/"))')
+          HELM_CHARTS=$(python -c "import os, json; print json.dumps(os.listdir('${{ env.CHARTS_DIR }}'))")
           echo "::set-output name=helm-charts::${HELM_CHARTS}"
 
       - name: Determine Helm Chart Version ⚙️
@@ -135,12 +138,12 @@ jobs:
       uses: docker://mikefarah/yq:3
       with:
         args:
-          yq write --inplace charts/${{ matrix.helm-chart }}/Chart.yaml version ${{ needs.setup.outputs.helm-charts-new-semver }}
+          yq write --inplace ${{ env.CHARTS_DIR }}/${{ matrix.helm-chart }}/Chart.yaml version ${{ needs.setup.outputs.helm-charts-new-semver }}
 
     # NOTE: workaround for https://github.com/helm/chart-releaser/issues/95
     - name: Create Chart.lock ⚙️
       run: |
-        helm dependency update charts/${{ matrix.helm-chart }}
+        helm dependency update ${{ env.CHARTS_DIR }}/${{ matrix.helm-chart }}
 
     # NOTE:
     #  Chart.lock uploaded as workaround for https://github.com/helm/chart-releaser/issues/95
@@ -149,8 +152,8 @@ jobs:
       with:
         name: ${{ matrix.helm-chart }}
         path: |
-          charts/${{ matrix.helm-chart }}/Chart.yaml
-          charts/${{ matrix.helm-chart }}/Chart.lock
+          ${{ env.CHARTS_DIR }}/${{ matrix.helm-chart }}/Chart.yaml
+          ${{ env.CHARTS_DIR }}/${{ matrix.helm-chart }}/Chart.lock
 
   release:
     runs-on: ubuntu-latest
